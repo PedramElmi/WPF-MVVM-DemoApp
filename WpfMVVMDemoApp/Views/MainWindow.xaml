@@ -1,0 +1,49 @@
+﻿<Window
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:WpfMVVMDemoApp"
+    xmlns:viewModels="clr-namespace:WpfMVVMDemoApp.ViewModels"
+    xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="WpfMVVMDemoApp.Views.MainWindow"
+    d:DataContext="{d:DesignInstance Type={x:Type viewModels:ViewModelBase}}"
+    xmlns:converters="clr-namespace:WpfMVVMDemoApp.ViewModels.Converters"
+    mc:Ignorable="d"
+    Title="MainWindow" Height="450" Width="800">
+
+    <Window.Resources>
+        <converters:BackGruondConverter x:Key="backGroundconverter"/>
+        <viewModels:ViewModelBase x:Key="viewModelBase"/>
+    </Window.Resources>
+    
+    
+    <Grid DataContext="{Binding Source={StaticResource viewModelBase}}"
+          Background ="{Binding Person.Gender, Converter={StaticResource ResourceKey=backGroundconverter}}">
+        
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left">
+            <TextBox Text="{Binding Person.FirstName, UpdateSourceTrigger=PropertyChanged}" FontSize="20"/>
+            <TextBox Text="{Binding Person.LastName, UpdateSourceTrigger=PropertyChanged}" FontSize="20"/>
+            <TextBlock Text="{Binding Person.FullName}" FontSize="20"/>
+            <ComboBox SelectedValue="{Binding Person.Gender, Mode=TwoWay}" ItemsSource="{Binding GenderTypes}">
+            </ComboBox>
+            <Button Content="Add to People"
+                    Command="{Binding AddPeopleCommand}"
+                    CommandParameter="{Binding Person}" FontSize="20"
+                    />
+        </StackPanel>
+        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right">
+            <Label Content="People List" FontSize="20"/>
+            <ListView ItemsSource="{Binding People}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Background="{Binding Gender, Converter={StaticResource ResourceKey=backGroundconverter}}">
+                            <TextBlock Text="{Binding FullName}" FontSize="24"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackPanel>
+        
+    </Grid>
+
+</Window>
